@@ -5,6 +5,7 @@ import android.os.PersistableBundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -14,12 +15,21 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.kapp.youtube.background.fragment.HomeFragment;
+import com.kapp.youtube.background.fragment.OfflineFragment;
+
 public class MainContainerActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    public static final String HOME = "HOME";
+    public static final String OFFLINE = "OFFLINE";
+    public static final String CURRENT_FRAGMENT = "CURRENT_FRAGMENT";
     private ActionBarDrawerToggle toggle;
     private DrawerLayout drawerLayout;
     private FloatingActionButton fab;
     private NavigationView navigationView;
+
+    private Fragment homeFragment, offlineFragment;
+    private String currentFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +54,28 @@ public class MainContainerActivity extends AppCompatActivity implements Navigati
                         .setAction("Action", null).show();
             }
         });
+
+        if (savedInstanceState != null) {
+            homeFragment = getSupportFragmentManager().getFragment(savedInstanceState, HOME);
+            offlineFragment = getSupportFragmentManager().getFragment(savedInstanceState, OFFLINE);
+            currentFragment = savedInstanceState.getString(CURRENT_FRAGMENT, HOME);
+        } else {
+            homeFragment = new HomeFragment();
+            offlineFragment = new OfflineFragment();
+            currentFragment = HOME;
+        }
+
+        if (currentFragment.equalsIgnoreCase(HOME))
+            switchFragment(homeFragment, HOME);
+        else
+            switchFragment(offlineFragment, OFFLINE);
+    }
+
+    private void switchFragment(Fragment toFragment, String key) {
+        currentFragment = key;
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, toFragment, key)
+                .commit();
     }
 
     @Override
@@ -54,18 +86,13 @@ public class MainContainerActivity extends AppCompatActivity implements Navigati
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main_container, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         if (id == R.id.action_settings) {
             return true;
         }
@@ -77,9 +104,13 @@ public class MainContainerActivity extends AppCompatActivity implements Navigati
         switch (item.getItemId()) {
             case R.id.nav_home:
                 item.setChecked(true);
+                if (!currentFragment.equalsIgnoreCase(HOME))
+                    switchFragment(homeFragment, HOME);
                 break;
             case R.id.nav_offline:
                 item.setChecked(true);
+                if (!currentFragment.equalsIgnoreCase(OFFLINE))
+                    switchFragment(offlineFragment, OFFLINE);
                 break;
         }
         drawerLayout.closeDrawer(GravityCompat.START);

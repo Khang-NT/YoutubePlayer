@@ -9,7 +9,6 @@
         android:id="@+id/card_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:cardBackgroundColor="@color/colorPrimary"
         app:cardCornerRadius="@dimen/card_corner_radius"
         app:cardElevation="3dp"
         app:cardPreventCornerOverlap="false"
@@ -43,6 +42,7 @@
                     android:padding="2dp"
                     android:textColor="#ffffff"
                     android:textSize="10sp"
+                    android:visibility="gone"
                     tools:text="10:13" />
             </FrameLayout>
 
@@ -51,11 +51,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
+                android:gravity="center_vertical"
                 android:lines="2"
                 android:maxLines="2"
                 android:paddingLeft="6dp"
                 android:paddingRight="6dp"
-                android:textColor="#ffff"
+                android:textColor="@color/black"
                 android:textSize="11sp"
                 android:typeface="sans"
                 tools:text="Khi Người Mình Yêu Khóc - Phan Mạnh Quỳnh (Official MV)" />
@@ -64,14 +65,14 @@
                 android:id="@+id/tv_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="2dp"
+                android:layout_marginBottom="4dp"
                 android:ellipsize="end"
                 android:lines="1"
                 android:maxLines="1"
                 android:paddingLeft="6dp"
                 android:paddingRight="6dp"
-                android:textColor="#ffffff"
-                android:textSize="8sp"
+                android:textColor="@color/smallTextColor"
+                android:textSize="9sp"
                 android:typeface="sans"
                 tools:text="1.235.688 views - Zing MP3" />
         </LinearLayout>

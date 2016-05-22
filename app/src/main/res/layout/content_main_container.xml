@@ -8,8 +8,9 @@
     tools:context="com.kapp.youtube.background.MainContainerActivity"
     tools:showIn="@layout/activity_main_container">
 
-    <com.kapp.youtube.background.widget.MediaItem
-        android:layout_width="wrap_content"
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
 </android.support.v4.widget.NestedScrollView>

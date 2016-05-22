@@ -1,6 +1,7 @@
 package com.kapp.youtube.background.widget;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.andexert.library.RippleView;
+import com.kapp.youtube.background.BuildConfig;
 import com.kapp.youtube.background.R;
 import com.kapp.youtube.background.model.IMedia;
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -46,8 +48,13 @@ public class MediaItem extends FrameLayout implements RippleView.OnRippleComplet
         LayoutInflater layoutInflater = LayoutInflater.from(context);
         layoutInflater.inflate(R.layout.media_item, this, true);
         ButterKnife.bind(this);
-
         rippleView.setOnRippleCompleteListener(this);
+
+        if (isInEditMode() || BuildConfig.DEBUG) {
+            setTitle("Kygo - Firestone ft. Conrad Sewell ");
+            setDescription("902.271 views - KygoOfficialVEVO");
+            setDuration("03:42");
+        }
     }
 
     @Override
@@ -80,6 +87,13 @@ public class MediaItem extends FrameLayout implements RippleView.OnRippleComplet
 
     public void setCardBackgroundColor(int color) {
         cardView.setCardBackgroundColor(color);
+        if (color == Color.WHITE) {
+            tvTitle.setTextColor(Color.BLACK);
+            tvDescription.setTextColor(Color.BLACK);
+        } else {
+            tvTitle.setTextColor(Color.WHITE);
+            tvDescription.setTextColor(Color.WHITE);
+        }
     }
 
     public void bindData(IMedia media) {
@@ -89,6 +103,4 @@ public class MediaItem extends FrameLayout implements RippleView.OnRippleComplet
         setCardBackgroundColor(media.getCardColor());
         media.bindThumbnail(ivThumbnail, Picasso.with(getContext()));
     }
-
-
 }

@@ -1,1 +1,3 @@
 /build
+*.json
+/src/main/java/com/kapp/youtube/background/SecretConstants.java
