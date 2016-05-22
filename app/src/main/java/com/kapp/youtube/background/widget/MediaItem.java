@@ -6,13 +6,13 @@ import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.andexert.library.RippleView;
 import com.kapp.youtube.background.BuildConfig;
 import com.kapp.youtube.background.R;
 import com.kapp.youtube.background.model.IMedia;
-import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
@@ -27,7 +27,7 @@ public class MediaItem extends FrameLayout implements RippleView.OnRippleComplet
 
     OnClickListener onClickListener;
     @BindView(R.id.rounded_image_view_thumbnail)
-    RoundedImageView ivThumbnail;
+    ImageView ivThumbnail;
     @BindView(R.id.tv_duration)
     TextView tvDuration;
     @BindView(R.id.tv_title)
@@ -85,6 +85,7 @@ public class MediaItem extends FrameLayout implements RippleView.OnRippleComplet
         }
     }
 
+    @Deprecated
     public void setCardBackgroundColor(int color) {
         cardView.setCardBackgroundColor(color);
         if (color == Color.WHITE) {
@@ -100,7 +101,7 @@ public class MediaItem extends FrameLayout implements RippleView.OnRippleComplet
         setTitle(media.getTitle());
         setDescription(media.getDescription());
         setDuration(media.getDuration());
-        setCardBackgroundColor(media.getCardColor());
+        //setCardBackgroundColor(media.getCardColor());
         media.bindThumbnail(ivThumbnail, Picasso.with(getContext()));
     }
 }

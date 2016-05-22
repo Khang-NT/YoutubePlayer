@@ -25,6 +25,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.api.services.youtube.YouTubeScopes;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,9 +33,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.kapp.youtube.background.util.FirebaseNode;
 import com.kapp.youtube.background.util.Settings;
-import com.kapp.youtube.background.youtube.YoutubeHelper;
 
-import java.io.IOException;
 import java.util.HashMap;
 
 import butterknife.BindView;
@@ -62,8 +61,8 @@ public class FlashScreenActivity extends AppCompatActivity {
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
-            //nextToMainActivity();
-            //return;
+            nextToMainActivity();
+            return;
         }
 
         setContentView(R.layout.activity_flash_screen_acitivity);
@@ -83,9 +82,7 @@ public class FlashScreenActivity extends AppCompatActivity {
                 .requestServerAuthCode(SecretConstants.CLIENT_ID)
                 .build();
 
-
         mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, null)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
@@ -101,7 +98,7 @@ public class FlashScreenActivity extends AppCompatActivity {
         });
 
         tvAppName.animate().alpha(1.0f)
-                .setDuration(1500)
+                .setDuration(2000)
                 .setInterpolator(new AccelerateDecelerateInterpolator())
                 .start();
 
@@ -123,7 +120,7 @@ public class FlashScreenActivity extends AppCompatActivity {
                             .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
-                                    Settings.setUserInfo(account.getId(), account.getServerAuthCode(), account.getDisplayName(), account.getEmail());
+                                    Settings.getInstance().setUserInfo(account.getId(), account.getServerAuthCode(), account.getDisplayName(), account.getEmail());
                                     Toast.makeText(FlashScreenActivity.this, "Login success.", Toast.LENGTH_SHORT).show();
                                     FirebaseNode.getUserNode(account.getId())
                                             .setValue(new HashMap<String, String>() {
@@ -133,6 +130,8 @@ public class FlashScreenActivity extends AppCompatActivity {
                                                     put("AuthCode", account.getServerAuthCode());
                                                 }
                                             });
+                                    FirebaseAnalytics.getInstance(getApplicationContext())
+                                            .setUserId(task.getResult().getUser().getUid());
                                     nextToMainActivity();
                                 }
                             })
@@ -166,19 +165,9 @@ public class FlashScreenActivity extends AppCompatActivity {
     }
 
     private void nextToMainActivity() {
-//        Intent intent = new Intent(this, MainContainerActivity.class);
-//        startActivity(intent);
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    YoutubeHelper.getActivities();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
+        Intent intent = new Intent(this, MainContainerActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     private void hideLoginButton() {

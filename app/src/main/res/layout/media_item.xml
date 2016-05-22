@@ -23,14 +23,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
-                <com.makeramen.roundedimageview.RoundedImageView
+                <ImageView
                     android:id="@+id/rounded_image_view_thumbnail"
                     android:layout_width="150dp"
                     android:layout_height="84.5dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/placeholder"
-                    app:riv_corner_radius_top_left="@dimen/card_corner_radius"
-                    app:riv_corner_radius_top_right="@dimen/card_corner_radius" />
+                    android:scaleType="fitXY"
+                    android:src="@drawable/placeholder" />
 
                 <TextView
                     android:id="@+id/tv_duration"
@@ -46,7 +44,7 @@
                     tools:text="10:13" />
             </FrameLayout>
 
-            <TextView
+            <com.devspark.robototextview.widget.RobotoTextView
                 android:id="@+id/tv_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -58,10 +56,11 @@
                 android:paddingRight="6dp"
                 android:textColor="@color/black"
                 android:textSize="11sp"
-                android:typeface="sans"
+                app:fontFamily="roboto"
+                app:textWeight="normal"
                 tools:text="Khi Người Mình Yêu Khóc - Phan Mạnh Quỳnh (Official MV)" />
 
-            <TextView
+            <com.devspark.robototextview.widget.RobotoTextView
                 android:id="@+id/tv_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -73,7 +72,8 @@
                 android:paddingRight="6dp"
                 android:textColor="@color/smallTextColor"
                 android:textSize="9sp"
-                android:typeface="sans"
+                app:fontFamily="roboto"
+                app:textWeight="normal"
                 tools:text="1.235.688 views - Zing MP3" />
         </LinearLayout>
     </android.support.v7.widget.CardView>

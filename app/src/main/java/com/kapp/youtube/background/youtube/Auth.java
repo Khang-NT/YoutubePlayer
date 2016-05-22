@@ -1,24 +1,23 @@
 package com.kapp.youtube.background.youtube;
 
 import android.content.Context;
+import android.util.Log;
 
+import com.google.api.client.auth.oauth2.BearerToken;
 import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.client.auth.oauth2.StoredCredential;
-import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
-import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
+import com.google.api.client.auth.oauth2.TokenResponse;
+import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest;
+import com.google.api.client.googleapis.auth.oauth2.GoogleRefreshTokenRequest;
 import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.client.util.store.DataStore;
-import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.youtube.YouTubeScopes;
+import com.kapp.youtube.background.SecretConstants;
 import com.kapp.youtube.background.util.Settings;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -35,6 +34,7 @@ public class Auth {
     private static final String CREDENTIAL_DATA_STORE = "credential_data_store";
     private static final String CLIENT_SECRETS_ASSET = "client_secrets.json";
     private static final String CREDENTIALS_DIRECTORY = "oauth-credentials";
+    private static final String TAG = "Auth";
     private static Context context;
 
     public static Set<String> allScopes() {
@@ -51,22 +51,44 @@ public class Auth {
         Auth.context = context;
     }
 
-    public static Credential authorize() throws IOException {
-        Reader clientSecretReader = new InputStreamReader(context.getAssets().open(CLIENT_SECRETS_ASSET));
-        GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, clientSecretReader);
+    public static synchronized Credential authorize() throws IOException {
+//        Reader clientSecretReader = new InputStreamReader(context.getAssets().open(CLIENT_SECRETS_ASSET));
+//        GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, clientSecretReader);
+//
+//        FileDataStoreFactory fileDataStoreFactory = new FileDataStoreFactory(context.getFileStreamPath(CREDENTIALS_DIRECTORY));
+//        DataStore<StoredCredential> datastore = fileDataStoreFactory.getDataStore(CREDENTIAL_DATA_STORE);
+//        Log.e("TAG", "authorize - line 76: " + Settings.getAuthCode());
+//        GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
+//                HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, allScopes())
+//                .setAccessType("offline")
+//                .setApprovalPrompt("auto")
+//                .setClientId(SecretConstants.CLIENT_ID)
+//                .build();
+//        //Credential credential = flow.loadCredential(Settings.getUserId());
+//        //if (credential != null)
+//            //return credential;
+//        GoogleTokenResponse tokenResponse = flow.newTokenRequest(Settings.getAuthCode()).execute();
+        GoogleTokenResponse tokenResponse;
+        Settings settings = Settings.getInstance();
+        if (settings.getRefreshToken() != null)
+            tokenResponse = new GoogleRefreshTokenRequest(
+                    HTTP_TRANSPORT, JSON_FACTORY, settings.getRefreshToken(), SecretConstants.CLIENT_ID, SecretConstants.CLIENT_SECRET
+            ).execute();
+        else {
+            tokenResponse = new GoogleAuthorizationCodeTokenRequest(
+                    HTTP_TRANSPORT, JSON_FACTORY, SecretConstants.CLIENT_ID,
+                    SecretConstants.CLIENT_SECRET, settings.getAuthCode(), ""
+            ).execute();
+            settings.setRefreshToken(tokenResponse.getRefreshToken());
+            Log.e(TAG, "authorize - line 81: " + settings.getRefreshToken());
+        }
+        return newCredential(tokenResponse);
+    }
 
-        FileDataStoreFactory fileDataStoreFactory = new FileDataStoreFactory(context.getFileStreamPath(CREDENTIALS_DIRECTORY));
-        DataStore<StoredCredential> datastore = fileDataStoreFactory.getDataStore(CREDENTIAL_DATA_STORE);
-
-        GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
-                HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, allScopes()).setCredentialDataStore(datastore)
-                .setAccessType("offline")
-                .setApprovalPrompt("auto")
-                .build();
-        Credential credential = flow.loadCredential(Settings.getUserId());
-        if (credential != null)
-            return credential;
-        GoogleTokenResponse tokenResponse = flow.newTokenRequest(Settings.getAuthCode()).execute();
-        return flow.createAndStoreCredential(tokenResponse, Settings.getUserId());
+    private static Credential newCredential(TokenResponse tokenResponse) {
+        Credential.Builder builder = new Credential.Builder(BearerToken.authorizationHeaderAccessMethod())
+                .setTransport(HTTP_TRANSPORT)
+                .setJsonFactory(JSON_FACTORY);
+        return builder.build().setFromTokenResponse(tokenResponse);
     }
 }

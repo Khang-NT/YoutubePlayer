@@ -2,6 +2,7 @@ package com.kapp.youtube.background;
 
 import android.app.Application;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.kapp.youtube.background.util.Settings;
 import com.kapp.youtube.background.youtube.Auth;
 
@@ -17,5 +18,6 @@ public class MainApplication extends Application {
         super.onCreate();
         Settings.initialize(this);
         Auth.initialize(this);
+        FirebaseAnalytics.getInstance(this).setAnalyticsCollectionEnabled(true);
     }
 }

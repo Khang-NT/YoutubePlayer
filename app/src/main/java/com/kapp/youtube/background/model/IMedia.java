@@ -15,7 +15,5 @@ public interface IMedia {
 
     String getDuration();
 
-    int getCardColor();
-
     void bindThumbnail(ImageView imageView, Picasso picasso);
 }
