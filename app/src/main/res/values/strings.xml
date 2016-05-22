@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Youtube Player Background</string>
+    <string name="app_name">Youtube Player</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 
@@ -90,4 +90,6 @@
         "when a user tries to pick up one of cards.\n\n"
     </string>
     <string name="action_settings">Settings</string>
+
+    <string name="title_activity_flash_screen_activity">Youtube player - Login</string>
 </resources>

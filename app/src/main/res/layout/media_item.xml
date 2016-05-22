@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.andexert.library.RippleView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ripple_view"
+    style="@style/ripple_style">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="@dimen/card_corner_radius"
+        app:cardElevation="3dp"
+        app:cardPreventCornerOverlap="false"
+        app:cardUseCompatPadding="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <com.makeramen.roundedimageview.RoundedImageView
+                    android:id="@+id/rounded_image_view_thumbnail"
+                    android:layout_width="150dp"
+                    android:layout_height="84.5dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/placeholder"
+                    app:riv_corner_radius_top_left="@dimen/card_corner_radius"
+                    app:riv_corner_radius_top_right="@dimen/card_corner_radius" />
+
+                <TextView
+                    android:id="@+id/tv_duration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|end"
+                    android:layout_margin="4dp"
+                    android:background="#c3000000"
+                    android:padding="2dp"
+                    android:textColor="#ffffff"
+                    android:textSize="10sp"
+                    android:visibility="gone"
+                    tools:text="10:13" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:lines="2"
+                android:maxLines="2"
+                android:paddingLeft="6dp"
+                android:paddingRight="6dp"
+                android:textColor="@color/black"
+                android:textSize="11sp"
+                android:typeface="sans"
+                tools:text="Khi Người Mình Yêu Khóc - Phan Mạnh Quỳnh (Official MV)" />
+
+            <TextView
+                android:id="@+id/tv_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:ellipsize="end"
+                android:lines="1"
+                android:maxLines="1"
+                android:paddingLeft="6dp"
+                android:paddingRight="6dp"
+                android:textColor="@color/smallTextColor"
+                android:textSize="9sp"
+                android:typeface="sans"
+                tools:text="1.235.688 views - Zing MP3" />
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+</com.andexert.library.RippleView>
